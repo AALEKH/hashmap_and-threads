@@ -116,8 +116,52 @@ class jaax_MultiMap {
 
 			std::lock_guard<std::mutex> guard(mutex_x);
 			int i_key = GetCrc32(key);
-			jaaX_Map.erase(i_key);
+			std::map<int, jaaX_Open_Addressing_>::iterator it = jaaX_Map.find(i_key);
+			jaaX_Open_Addressing_ *current=new jaaX_Open_Addressing_;
+			jaaX_Open_Addressing_ *previous=new jaaX_Open_Addressing_;			
+			
+			if(it != jaaX_Map.end()) {
+
+				if(jaaX_Map[i_key].key != key) {
+
+					current = jaaX_Map[i_key].next;
+					while(current->key != key) {
+					  previous = current;
+				      current=current->next;	
+				    }
+				    if(current->next == NULL){ // Last item deleted
+				    	previous->next = NULL;
+				    	jaaX_Map[i_key].lastIndex = previous;
+				    	delete current;
+				    } else {
+				    	previous->next = current->next;
+				    	delete current;
+				    }
+
+				} else {
+					if(jaaX_Map[i_key].number_of_collision_elements == 0) {
+
+						jaaX_Map.erase(i_key);
+					
+					} else {
+
+						current = jaaX_Map[i_key].next;
+						jaaX_Map[i_key].key = current->key;
+						jaaX_Map[i_key].value = current->value; 
+						if(current->next == NULL){ // Only 2 item's present test
+							jaaX_Map[i_key].lastIndex = NULL;
+							delete current;
+						} else {
+							jaaX_Map[i_key].next = current->next;
+							delete current;
+						}
+
+					}
+
+				}
+			} 
 		}
+
 
 		void put_element(std::string key, std::string value) {
 
@@ -142,7 +186,6 @@ class jaax_MultiMap {
 				jaaX_Map[i_key].value = value;
 			
 			}
-		
 		}
 };
 
