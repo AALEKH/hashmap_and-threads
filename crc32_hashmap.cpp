@@ -58,6 +58,27 @@ class jaax_MultiMap {
 			if(it != jaaX_Map.end())
 			{
 			   // Add colision element found code here
+				jaaX_Open_Addressing_ *node=new jaaX_Open_Addressing_;
+				node->key = key;
+				node->value = value;
+				node->number_of_collision_elements = 1;
+				node->next = NULL;
+				node->lastIndex = NULL;
+
+				if(jaaX_Map[i_key].number_of_collision_elements == 0){
+				
+					jaaX_Map[i_key].next = node;
+					jaaX_Map[i_key].lastIndex = node;
+					jaaX_Map[i_key].number_of_collision_elements = jaaX_Map[i_key].number_of_collision_elements + 1;
+				
+				} else {
+				
+					jaaX_Map[i_key].lastIndex->next = node;
+					// jaaX_Map.find(i_key)->lastIndex->lastIndex = node; // Not needed
+					jaaX_Map[i_key].lastIndex = node;
+					jaaX_Map[i_key].number_of_collision_elements = jaaX_Map[i_key].number_of_collision_elements + 1;
+				
+				}
 
 			} else {
 				// Insert's element if collision does not occur
