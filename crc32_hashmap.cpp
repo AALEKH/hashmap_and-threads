@@ -95,7 +95,17 @@ class jaax_MultiMap {
 			if(it != jaaX_Map.end())
 			{
 			   // Currently just returns non colision element found add colision case code here.
-				return {jaaX_Map[i_key].key, jaaX_Map[i_key].value};
+				if(jaaX_Map[i_key].key != key) {
+
+					jaaX_Open_Addressing_ *current=new jaaX_Open_Addressing_;
+					current = jaaX_Map[i_key].next;
+					while(current->key != key) {
+				      current=current->next;	
+				    }
+				    return {current->key, current->value};
+				} else {
+					return {jaaX_Map[i_key].key, jaaX_Map[i_key].value};
+				}
 			} else {
 				// Element's not found
 				return {"", ""};
