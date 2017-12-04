@@ -123,7 +123,25 @@ class jaax_MultiMap {
 
 			std::lock_guard<std::mutex> guard(mutex_x);
 			int i_key = GetCrc32(key);
-			jaaX_Map[i_key].value = value;
+			
+			if(jaaX_Map[i_key].key != key) {
+
+				jaaX_Open_Addressing_ *current=new jaaX_Open_Addressing_;
+				current = jaaX_Map[i_key].next;
+				
+				while(current->key != key) {
+			    
+			      current=current->next;	
+			    
+			    }
+			    
+			    current->value = value;
+
+			} else {
+
+				jaaX_Map[i_key].value = value;
+			
+			}
 		
 		}
 };
