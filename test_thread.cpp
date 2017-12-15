@@ -33,7 +33,7 @@ void WriteBuffer::WritePart(int write_part) {
 
 
 
-  if (size_buffer_live > 5) {
+  if ( buffers_[im_live_].size() > 5) {
 
     mutex_flush_level2_.lock();
 
