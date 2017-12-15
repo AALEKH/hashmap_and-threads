@@ -38,6 +38,9 @@ void WriteBuffer::WritePart(int write_part) {
     mutex_flush_level2_.lock();
 
     std::unique_lock<std::mutex> lock_swap(mutex_indices_level3_);
+    std::cout << "Notifying cv flush now" << std::endl;
+    std::swap(im_live_, im_copy_);
+    size_buffer_live = 0;
     cv_flush_.notify_one();
 
     mutex_flush_level2_.unlock();
